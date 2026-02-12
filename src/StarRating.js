@@ -15,21 +15,22 @@ const testStyle = {
 };
 function StarRating({ maxRating = 5 }) {
   const [rating, setRating] = useState(0);
-  function handleRating(rating) {
-    setRating(rating);
-  }
+  const [tempRating, seTempRating] = useState(0);
+
   return (
     <div style={coninerStyle}>
       <div style={StarContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
             key={i}
-            onClick={() => handleRating(i + 1)}
-            full={rating >= i + 1}
+            onClick={() => setRating(i + 1)}
+            full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
+            onHoverIn={() => seTempRating(i + 1)}
+            onHoverOut={() => seTempRating(0)}
           />
         ))}
       </div>
-      <p style={testStyle}>{rating || ""}</p>
+      <p style={testStyle}>{tempRating || ""}</p>
     </div>
   );
 }
@@ -39,9 +40,15 @@ const starStyle = {
   display: "block",
   cursor: "pointer",
 };
-function Star({ onClick, full }) {
+function Star({ onClick, full, onHoverIn, onHoverOut }) {
   return (
-    <span role="button" style={starStyle} onClick={onClick}>
+    <span
+      role="button"
+      style={starStyle}
+      onClick={onClick}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+    >
       {full ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
